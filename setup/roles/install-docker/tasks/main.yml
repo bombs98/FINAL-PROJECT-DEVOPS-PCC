@@ -41,9 +41,3 @@
       - docker
   register: result
   failed_when: result.rc != 9 and result.rc != 130
-
-- name: Install Docker Certificates 2
-  become: yes
-  shell: |
-    sudo groupadd docker
-    sudo usermod -aG docker $USER
