@@ -1,0 +1,15 @@
+---
+- name: Setup App
+  hosts: APP
+  become: yes
+  roles:
+    - install-docker
+    
+
+- name: Setup Database
+  hosts: DB
+  roles:
+    - role: install-mysql
+      become: yes
+  vars_files:
+    - vars/mysql.yml

@@ -1,0 +1,43 @@
+---
+- name: Install Docker Requirements
+  become: yes
+  apt:
+    pkg:
+      - ca-certificates
+      - curl
+    state: latest
+    update_cache: yes
+
+- name: Install Docker Certificates
+  become: yes
+  shell: |
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: Install Docker
+  become: yes
+  apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: yes
+
+- name: Add user to docker group
+  become: yes
+  ansible.builtin.user:
+    append: true
+    name: $USER
+    groups:
+      - docker
+  register: result
+  failed_when: result.rc != 9 and result.rc != 130
