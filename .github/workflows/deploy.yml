@@ -12,8 +12,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: |
-        apt-get update
-        chmod 666 ~/var/run/docker.sock
         cd ./hello-world-app/app
         docker build . --file Dockerfile --tag app
 
@@ -25,8 +23,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Deploy
       run: |
-        apt-get update
-        chmod 666 ~/var/run/docker.sock
         cd ./hello-world/app/app
         docker run -p 8000:8000 -d app
         docker image prune -f
