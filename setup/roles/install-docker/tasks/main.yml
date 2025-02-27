@@ -14,7 +14,6 @@
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
-    sudo chmod 666 ~/var/run/docker.sock
 
     echo \
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
@@ -33,12 +32,10 @@
     state: latest
     update_cache: yes
 
-- name: Add user to docker group
+- name: Post Installation Docker
   become: yes
-  ansible.builtin.user:
-    append: true
-    name: $USER
-    groups:
-      - docker
-  register: result
-  failed_when: result.rc != 9 and result.rc != 130
+  shell: |
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service

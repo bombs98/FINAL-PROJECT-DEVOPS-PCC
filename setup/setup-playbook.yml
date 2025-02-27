@@ -6,10 +6,10 @@
     - install-docker
     
 
-- name: Setup Database
-  hosts: DB
-  roles:
-    - role: install-mysql
-      become: yes
-  vars_files:
-    - vars/mysql.yml
+# - name: Setup Database
+#   hosts: DB
+#   roles:
+#     - role: install-mysql
+#       become: yes
+#   vars_files:
+#     - vars/mysql.yml
